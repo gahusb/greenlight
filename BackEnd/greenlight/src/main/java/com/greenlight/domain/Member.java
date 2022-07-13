@@ -1,7 +1,15 @@
 package com.greenlight.domain;
 
+import org.springframework.stereotype.Controller;
+
+import javax.persistence.*;
+
+@Entity
 public class Member {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)// DB가 알아서 autoincrement
     private Long id;
+
     private String name;
 
     public Long getId() {

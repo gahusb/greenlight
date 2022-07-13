@@ -4,9 +4,11 @@ import com.greenlight.domain.Member;
 import com.greenlight.repository.MemberRepository;
 import com.greenlight.repository.MemoryMemberRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 public class MemberService {
     private final MemberRepository memberRepository = new MemoryMemberRepository();
 
