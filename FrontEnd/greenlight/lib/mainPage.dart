@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenlight/ChatPage.dart';
 import 'package:greenlight/main/communicationPage.dart';
 import 'package:greenlight/main/mapPage.dart';
 import 'package:greenlight/main/settingPage.dart';
@@ -17,8 +18,7 @@ class _MainPage extends State<MainPage> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    controller = TabController(length: 3, vsync: this);
-
+    controller = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -36,7 +36,8 @@ class _MainPage extends State<MainPage> with SingleTickerProviderStateMixin {
           // TabBarView에 채울 위젯들
           MapPage(),
           CommunicationPage(),
-          SettingPage()
+          ChatPage(),
+          SettingPage(),
         ],
         controller: controller,
       ),
@@ -47,6 +48,9 @@ class _MainPage extends State<MainPage> with SingleTickerProviderStateMixin {
           ),
           Tab(
             icon: Icon(Icons.star),
+          ),
+          Tab(
+            icon: Icon(Icons.chat),
           ),
           Tab(
             icon: Icon(Icons.settings),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'ChatPage.dart';
 import 'login.dart';
 import 'main/mapPage.dart';
 import 'mainPage.dart';
@@ -40,5 +41,6 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/sign': (context) => SignPage(),
         '/map': (context) => MapPage(),
+        '/chat': (context) => ChatPage(),
       },);}
 }
