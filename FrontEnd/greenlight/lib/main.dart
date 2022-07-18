@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:greenlight/providers/posts.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'ChatPage.dart';
 import 'login.dart';
 import 'main/mapPage.dart';
+import 'main/boardPage.dart';
 import 'mainPage.dart';
 import 'signPage.dart';
+import './main/boardPage.dart';
+import './main/postDetailPage.dart';
+import './main/editPostPage.dart';
+import './providers/posts.dart';
+import 'providers/comments.dart';
+import './providers/auth.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,17 +39,29 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Future<Database> database = initDatabase(); // build 할때 initDatabase() 함수를 호출
-    return MaterialApp(
-      title: '그린라이트',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => MainPage(),
-        '/login': (context) => LoginPage(),
-        '/sign': (context) => SignPage(),
-        '/map': (context) => MapPage(),
-        '/chat': (context) => ChatPage(),
-      },);}
+    return ChangeNotifierProxyProvider<Auth, Posts>(
+        create: (context)=> Posts('', '', []),
+        update: (context, value, previous) => Posts(
+          '',
+          '',
+          previous == null? [] : previous.items,
+        ),
+
+        child:
+        MaterialApp(
+        title: '그린라이트',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => MainPage(),
+          '/login': (context) => LoginPage(),
+          '/sign': (context) => SignPage(),
+          '/map': (context) => MapPage(),
+          '/chat': (context) => ChatPage(),
+          '/board': (context) => BoardPage(),
+        })
+      );
+    }
 }
