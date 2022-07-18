@@ -5,16 +5,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor
 @Entity
 public class Member extends BaseTimeEntity {
     @Id//PK
+    @Column(name = "pk")
     @GeneratedValue(strategy = GenerationType.IDENTITY)// DB가 알아서 autoincrement
     private Long PK;
     private String id;
