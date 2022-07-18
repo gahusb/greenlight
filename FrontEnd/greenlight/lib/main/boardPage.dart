@@ -18,6 +18,15 @@ class BoardPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('게시판'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.of(context).pushNamed(EditPostScreen.routeName,
+                  arguments: {'postId': null});
+            },
+          ),
+        ],
       ),
       body: FutureBuilder(
         future: _refreshPosts(context),

@@ -25,11 +25,11 @@ class Posts with ChangeNotifier {
     print('fetchAndSetPosts');
     final filterString = 'orderBy="boardId"&equalTo="';
     var url =
-        'https://flutterforumdemoapp-default-rtdb.firebaseio.com/posts.json?auth=$authToken&$filterString';
+        '/서버 url';
     try {
       // final response = await http.get(Uri.parse(url));
       var list_data =
-        {'post_id': 1 ,
+      {'post_id': '1' ,
         'user_id': 'naeun',
         'title': '테스트',
         'content': '테스트 내용입니다.',
@@ -46,51 +46,17 @@ class Posts with ChangeNotifier {
         return;
       }
 
-      final List<Post> loadedPosts = [];
-      extractedData.forEach((postId, postData) {
-        loadedPosts.add(Post(
-          id: postId,
-          title: postData['title'],
-          contents: postData['content'],
-          datetime: DateTime.parse(postData['fst_crt_date']),
-          userId: postData['user_id'],
-        ));
-      });
-      print('extractedData : ${extractedData.toString()}');
-      _items = loadedPosts;
-      notifyListeners();
-    } catch (error) {
-      throw (error);
-    }
-  }
-  Future<void> fetchAndSetPosts2(String SearchText) async {
-    final filterString = 'orderBy="boardId"&equalTo="';
-    var url =
-        'https://flutterforumdemoapp-default-rtdb.firebaseio.com/posts.json?auth=$authToken&$filterString';
-    try {
-      final response = await http.get(Uri.parse(url));
-      final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      if (extractedData == null) {
-        return;
-      }
+      final List<Post> loadedPosts = _items;
+      loadedPosts.add(Post(
+        id: extractedData['postId'],
+        title: extractedData['title'],
+        contents: extractedData['content'],
+        datetime: DateTime.parse(extractedData['fst_crt_date']),
+        userId: extractedData['user_id'],
+      ));
 
-      final List<Post> loadedPosts = [];
-      extractedData.forEach((postId, postData) {
-        String title = postData['title'];
-        String con = postData['contents'];
-        if(title.contains(SearchText)||(con.contains(SearchText))&&!SearchText.isEmpty)
-        {
-          loadedPosts.add(Post(
-            id: postId,
-            title: postData['title'],
-            contents: postData['contents'],
-            datetime: DateTime.parse(postData['datetime']),
-            userId: postData['creatorId'],
-          ));
-        }
-      });
-      _items=[];
       _items = loadedPosts;
+
       notifyListeners();
     } catch (error) {
       throw (error);
@@ -99,7 +65,7 @@ class Posts with ChangeNotifier {
 
   Future<void> addPost(Post post) async {
     final url =
-        'https://flutterforumdemoapp-default-rtdb.firebaseio.com/posts.json?auth=$authToken';
+        '/서버 url/posts.json?auth=$authToken';
     final timeStamp = DateTime.now();
 
     try {
@@ -134,7 +100,7 @@ class Posts with ChangeNotifier {
     final postIndex = _items.indexWhere((post) => post.id == id);
     if (postIndex >= 0) {
       final url =
-          'https://flutterforumdemoapp-default-rtdb.firebaseio.com/posts/$id.json?auth=$authToken';
+          '/서버 url/posts/$id.json?auth=$authToken';
       await http.patch(Uri.parse(url),
           body: json.encode({
             'title': newPost.title,
@@ -149,7 +115,7 @@ class Posts with ChangeNotifier {
 
   Future<void> deletePost(String id) async {
     final url =
-        'https://flutterforumdemoapp-default-rtdb.firebaseio.com/posts/$id.json?auth=$authToken';
+        '/서버 url/posts/$id.json?auth=$authToken';
 
     final existingPostIndex = _items.indexWhere((post) => post.id == id);
     Post? existingPost = _items[existingPostIndex];

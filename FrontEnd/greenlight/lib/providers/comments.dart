@@ -24,7 +24,7 @@ class Comments with ChangeNotifier {
   Future<void> fetchAndSetComments(String postId) async {
     final filterString = 'orderBy="postId"&equalTo="$postId"';
     var url =
-        'https://flutterforumdemoapp-default-rtdb.firebaseio.com/comments.json?auth=$authToken&$filterString';
+        '/서버 url/comments.json?auth=$authToken&$filterString';
     try {
       final response = await http.get(Uri.parse(url));
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -53,7 +53,7 @@ class Comments with ChangeNotifier {
 
   Future<void> addComment(Comment comment) async {
     final url =
-        'https://flutterforumdemoapp-default-rtdb.firebaseio.com/comments.json?auth=$authToken';
+        '/서버 url/comments.json?auth=$authToken';
     final timeStamp = DateTime.now();
 
     try {
@@ -86,7 +86,7 @@ class Comments with ChangeNotifier {
 
   Future<void> deleteComment(String id) async {
     final url =
-        'https://flutterforumdemoapp-default-rtdb.firebaseio.com/comments/$id.json?auth=$authToken';
+        '/서버 url/comments/$id.json?auth=$authToken';
 
     final existingCommentIndex =
     _items.indexWhere((comment) => comment.id == id);
