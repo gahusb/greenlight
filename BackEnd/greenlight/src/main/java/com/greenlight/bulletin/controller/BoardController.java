@@ -20,8 +20,8 @@ public class BoardController {
         return boardService.save(boardSaveRequestDto);
     }
 
-    @PutMapping("/board/{id}")
-    public Long update(@PathVariable Long id, @RequestBody BoardUpdateRequestDto boardUpdateRequestDto){
-        return boardService.update(id, boardUpdateRequestDto);
+    @PutMapping("/board/{boardId}")
+    public Long update(@PathVariable Long boardId, @RequestBody BoardUpdateRequestDto boardUpdateRequestDto){
+        return boardService.update(boardId, boardUpdateRequestDto);
     }
 }
