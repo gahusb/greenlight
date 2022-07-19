@@ -90,4 +90,29 @@ public class BoardControllerTest {
         assertThat(boardList.get(0).getContent()).isEqualTo(content);
         assertThat(boardList.get(0).getTitle()).isEqualTo(title);
     }
+
+    @Test
+    public void 게시판조회() throws Exception{
+        //given
+        String title = "게시판이름9";
+        String content = "게시판내용9";
+        String memberId = "cashbee";
+
+        String url = "http://localhost:" + port + "/board/cashbee/1";
+
+
+        //when
+        ResponseEntity<BoardResponseDto> responseEntity =
+                testRestTemplate.getForEntity(url, BoardResponseDto.class);
+        BoardResponseDto respDto = responseEntity.getBody();
+
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        List<Board> boardList = boardRepository.findAll();
+        assertThat(respDto.getContent()).isEqualTo(content);
+        assertThat(respDto.getTitle()).isEqualTo(title);
+        assertThat(respDto.getMemberId()).isEqualTo(memberId);
+    }
 }

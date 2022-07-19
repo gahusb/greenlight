@@ -2,13 +2,17 @@ package com.greenlight.bulletin.dto;
 
 import com.greenlight.Member.domain.Member;
 import com.greenlight.bulletin.domain.Board;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class BoardResponseDto {
     private Long PK;
     private String title;
