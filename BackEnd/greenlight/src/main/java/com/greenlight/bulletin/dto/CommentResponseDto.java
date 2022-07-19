@@ -12,7 +12,7 @@ import java.util.List;
 public class CommentResponseDto {
     private Long PK;
     private String comment;
-    private String name;
+    private String memberId;
     private Long boardId;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
@@ -21,7 +21,7 @@ public class CommentResponseDto {
     public CommentResponseDto(Comment comment){
         this.PK = comment.getPK();
         this.comment = comment.getComment();
-        this.name = comment.getMember().getName();
+        this.memberId = comment.getMemberId();
         this.boardId = comment.getBoard().getPK();
         this.createdDate = comment.getCreatedDate();
         this.modifiedDate = comment.getModifiedDate();

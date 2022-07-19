@@ -2,10 +2,7 @@ package com.greenlight.bulletin.domain;
 
 import com.greenlight.BaseTimeEntity;
 import com.greenlight.Member.domain.Member;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,6 +10,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity
+@Data
 @Builder
 @AllArgsConstructor
 public class Board extends BaseTimeEntity {
@@ -27,9 +25,7 @@ public class Board extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content; // 글 내용
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_pk")
-    private Member member;
+    private String memberId;
 
     @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("PK asc")

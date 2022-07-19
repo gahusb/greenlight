@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService commentService;
 
-    @PostMapping("/board/{id}/comment")
-    public Long save(@RequestBody CommentSaveRequestDto commentSaveRequestDto){
-        return commentService.save(commentSaveRequestDto);
+    @PostMapping("/board/comment/{memberId}/{boardId}")
+    public Long save(@PathVariable String memberId, @RequestBody Long boardId, @RequestBody CommentSaveRequestDto commentSaveRequestDto){
+        return commentService.save(memberId, boardId, commentSaveRequestDto);
     }
 
-    @PutMapping("/board/{boardId}/comment/{commentId}")
+    @PutMapping("/board/comment/{memberId}/{commentId}/{boardId}/")
     public Long update(@PathVariable Long boardId, @PathVariable Long commentId, @RequestBody CommentUpdateRequestDto commentUpdateRequestDto){
         return commentService.update(boardId, commentId, commentUpdateRequestDto);
     }

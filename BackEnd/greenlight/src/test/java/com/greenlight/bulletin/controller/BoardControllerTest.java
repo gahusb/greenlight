@@ -1,0 +1,93 @@
+package com.greenlight.bulletin.controller;
+
+import com.greenlight.Member.dto.MemberSaveRequestDto;
+import com.greenlight.bulletin.domain.Board;
+import com.greenlight.bulletin.dto.BoardResponseDto;
+import com.greenlight.bulletin.dto.BoardSaveRequestDto;
+import com.greenlight.bulletin.dto.BoardUpdateRequestDto;
+import com.greenlight.bulletin.repository.BoardRepository;
+import com.greenlight.bulletin.repository.CommentRepository;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class BoardControllerTest {
+
+    @LocalServerPort
+    private int port;
+
+    @Autowired
+    private TestRestTemplate testRestTemplate;
+
+    @Autowired
+    private BoardRepository boardRepository;
+
+    @Test
+    public void 게시판등록() throws Exception{
+        //given
+        String title = "게시판이름";
+        String content = "게시판내용";
+        String memberId = "cashbee";
+        BoardSaveRequestDto boardSaveRequestDto =
+                BoardSaveRequestDto.builder()
+                        .title(title)
+                        .content(content)
+                        .memberId(memberId)
+                        .build();
+        String url = "http://localhost:" + port + "/board/cashbee";
+
+
+        //when
+        ResponseEntity<Long> responseEntity = testRestTemplate.postForEntity(url, boardSaveRequestDto, Long.class);
+
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isGreaterThan(0L);
+
+        List<Board> boardList = boardRepository.findAll();
+        assertThat(boardList.get(boardList.size() - 1).getContent()).isEqualTo(content);
+        assertThat(boardList.get(boardList.size() - 1).getTitle()).isEqualTo(title);
+        assertThat(boardList.get(boardList.size() - 1).getMemberId()).isEqualTo(memberId);
+    }
+
+    @Test
+    public void 게시판수정() throws Exception{
+        //given
+
+        String title = "게시판이름9";
+        String content = "게시판내용9";
+        BoardUpdateRequestDto boardUpdateRequestDto =
+                BoardUpdateRequestDto.builder()
+                        .title(title)
+                        .content(content)
+                        .build();
+        String url = "http://localhost:" + port + "/board/cashbee/1";
+        HttpEntity<BoardUpdateRequestDto> boardUpdateRequestDtoHttpEntity
+                = new HttpEntity<>(boardUpdateRequestDto);
+
+
+        //when
+        ResponseEntity<Long> responseEntity = testRestTemplate.exchange(url, HttpMethod.PUT, boardUpdateRequestDtoHttpEntity, Long.class);
+
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isGreaterThan(0L);
+
+        List<Board> boardList = boardRepository.findAll();
+        assertThat(boardList.get(0).getContent()).isEqualTo(content);
+        assertThat(boardList.get(0).getTitle()).isEqualTo(title);
+    }
+}

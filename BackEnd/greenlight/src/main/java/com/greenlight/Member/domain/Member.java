@@ -15,8 +15,11 @@ public class Member extends BaseTimeEntity {
     @Column(name = "pk")
     @GeneratedValue(strategy = GenerationType.IDENTITY)// DB가 알아서 autoincrement
     private Long PK;
+    @Column(nullable = false, length = 30, unique = true)
     private String id;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private String name;
     private boolean donated;
 
