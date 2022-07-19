@@ -1,16 +1,14 @@
 class Post {
-  final String? id;
+  final String? pk;
   final String? title;
-  final String? contents;
-  final DateTime? datetime;
-  final String? boardId;
+  final String? content;
+  final DateTime? createdDate;
   final String? userId;
 
   Post(
-      {this.id,
+      {this.pk,
         this.title,
-        this.contents,
-        this.datetime,
-        this.boardId,
+        this.content,
+        this.createdDate,
         this.userId});
 }

@@ -15,7 +15,7 @@ class PostItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final posts = Provider.of<Posts>(context, listen: false).items;
-    final postIndex = posts.indexWhere((post) => post.id == id);
+    final postIndex = posts.indexWhere((post) => post.pk == id);
     final post = posts[postIndex];
 
     return ListTile(
@@ -26,18 +26,18 @@ class PostItem extends StatelessWidget {
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       subtitle: Text(
-        post.contents!,
+        post.content!,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
-      trailing: (DateTime.now().day - post.datetime!.day >= 1)
-          ? Text(DateFormat('MM/dd').format(post.datetime!))
-          : Text(DateFormat('HH:mm').format(post.datetime!)),
+      trailing: (DateTime.now().day - post.createdDate!.day >= 1)
+          ? Text(DateFormat('MM/dd').format(post.createdDate!))
+          : Text(DateFormat('HH:mm').format(post.createdDate!)),
       onTap: () async {
         await Provider.of<Comments>(context, listen: false)
             .fetchAndSetComments(id!);
         Navigator.of(context)
-            .pushNamed(PostDetailScreen.routeName, arguments: id);
+            .pushNamed(PostDetailPage.routeName, arguments: id);
       },
     );
   }

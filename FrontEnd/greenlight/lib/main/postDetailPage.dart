@@ -11,16 +11,16 @@ import '../widgets/comment_item.dart';
 import '../model/comment.dart';
 
 
-class PostDetailScreen extends StatefulWidget {
-  static const routeName = './postDetail';
+class PostDetailPage extends StatefulWidget {
+  static const routeName = '/postDetail';
 
-  const PostDetailScreen({Key? key}) : super(key: key);
+  const PostDetailPage({Key? key}) : super(key: key);
 
   @override
-  _PostDetailScreenState createState() => _PostDetailScreenState();
+  _PostDetailPageState createState() => _PostDetailPageState();
 }
 
-class _PostDetailScreenState extends State<PostDetailScreen> {
+class _PostDetailPageState extends State<PostDetailPage> {
   var _isLoading = false;
   final _commentFocusNode = FocusNode();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -43,7 +43,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   Widget build(BuildContext context) {
     final id = ModalRoute.of(context)!.settings.arguments as String;
     final post =
-    Provider.of<Posts>(context).items.firstWhere((post) => post.id == id);
+    Provider.of<Posts>(context).items.firstWhere((post) => post.pk == id);
     final comments = Provider.of<Comments>(context).items;
     final authUserId =
     Provider.of<Auth>(context, listen: false).userId as String;
@@ -62,7 +62,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             icon: const Icon(Icons.edit),
             onPressed: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pushNamed(EditPostScreen.routeName,
+              Navigator.of(context).pushNamed(EditPostPage.routeName,
                   arguments: {'postId': id });
             },
           ),
@@ -143,7 +143,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     ),
                     title: Text('익명'),
                     subtitle: Text(DateFormat('yy/MM/dd - HH:mm:ss')
-                        .format(post.datetime!)),
+                        .format(post.createdDate!)),
                   ),
                   // 제목
                   Container(
@@ -161,7 +161,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text(post.contents!),
+                      child: Text(post.content!),
                     ),
                   ),
                   SizedBox(
@@ -233,7 +233,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                     _commentTextEditController.text);
 
                                 if (_formKey.currentState!.validate()) {
-                                  _addComment(post.boardId!, post.id!,
+                                  _addComment(post.pk!,
                                       commentText);
 
                                   _commentTextEditController.clear();
@@ -260,8 +260,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     );
   }
 
-  Future<void> _addComment(
-      String boardId, String postId, String contents) async {
+  Future<void> _addComment(String postId, String contents) async {
     final comment = Comment(
         contents: contents,
         postId: postId,

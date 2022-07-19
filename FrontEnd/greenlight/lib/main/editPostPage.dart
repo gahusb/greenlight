@@ -5,29 +5,28 @@ import '../model/posting.dart';
 import '../providers/posts.dart';
 import '../providers/auth.dart';
 
-class EditPostScreen extends StatefulWidget {
-  static const routeName = './editPost';
+class EditPostPage extends StatefulWidget {
+  static const routeName = '/editPost';
 
   @override
-  _EditPostScreenState createState() => _EditPostScreenState();
+   createState() => _EditPostPageState();
 }
 
-class _EditPostScreenState extends State<EditPostScreen> {
+class _EditPostPageState extends State<EditPostPage> {
   final _contentsFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
 
   var _editedPost = Post(
-    id: null,
+    pk: null,
     title: '',
-    contents: '',
-    datetime: null,
-    boardId: '',
+    content: '',
+    createdDate: null,
     userId: '',
   );
 
   var _initValues = {
     'title': '',
-    'contents': '',
+    'content': '',
   };
 
   var _isInit = true;
@@ -47,10 +46,10 @@ class _EditPostScreenState extends State<EditPostScreen> {
       if (postId != null) {
         _editedPost = Provider.of<Posts>(context, listen: false)
             .items
-            .firstWhere((post) => post.id == postId);
+            .firstWhere((post) => post.pk == postId);
         _initValues = {
           'title': _editedPost.title ?? '',
-          'contents': _editedPost.contents ?? '',
+          'content': _editedPost.content ?? '',
         };
       }
     }
@@ -75,9 +74,9 @@ class _EditPostScreenState extends State<EditPostScreen> {
       _isLoading = true;
     });
 
-    if (_editedPost.id != null) {
+    if (_editedPost.pk != null) {
       await Provider.of<Posts>(context, listen: false)
-          .updatePost(_editedPost.id, _editedPost);
+          .updatePost(_editedPost.pk, _editedPost);
     } else {
       try {
         await Provider.of<Posts>(context, listen: false).addPost(_editedPost);
@@ -149,16 +148,15 @@ class _EditPostScreenState extends State<EditPostScreen> {
                   onSaved: (value) {
                     _editedPost = Post(
                       title: value,
-                      contents: _editedPost.contents,
-                      datetime: _editedPost.datetime,
-                      boardId: arguments['boardId'],
+                      content: _editedPost.content,
+                      createdDate: _editedPost.createdDate,
                       userId: userId,
-                      id: _editedPost.id,
+                      pk: _editedPost.pk,
                     );
                   },
                 ),
                 TextFormField(
-                  initialValue: _initValues['contents'],
+                  initialValue: _initValues['content'],
                   decoration: InputDecoration(labelText: '내용'),
                   maxLines: 15,
                   keyboardType: TextInputType.multiline,
@@ -173,10 +171,9 @@ class _EditPostScreenState extends State<EditPostScreen> {
                   onSaved: (value) {
                     _editedPost = Post(
                       title: _editedPost.title,
-                      contents: value,
-                      boardId: _editedPost.boardId,
-                      datetime: _editedPost.datetime,
-                      id: _editedPost.id,
+                      content: value,
+                      createdDate: _editedPost.createdDate,
+                      pk: _editedPost.pk,
                       userId: _editedPost.userId,
                     );
                   },

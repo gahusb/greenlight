@@ -18,6 +18,15 @@ class BoardPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('게시판'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.of(context).pushNamed(EditPostPage.routeName,
+                  arguments: {'postId': null});
+            },
+          ),
+        ],
       ),
       body: FutureBuilder(
         future: _refreshPosts(context),
@@ -37,7 +46,7 @@ class BoardPage extends StatelessWidget {
                 itemBuilder: (_, i) => Column(
                   children: [
                     PostItem(
-                      postsData.items[i].id,
+                      postsData.items[i].pk,
                     ),
                     Divider(),
                   ],
