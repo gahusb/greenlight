@@ -34,10 +34,10 @@ class PostItem extends StatelessWidget {
           ? Text(DateFormat('MM/dd').format(post.createdDate!))
           : Text(DateFormat('HH:mm').format(post.createdDate!)),
       onTap: () async {
-        await Provider.of<Comments>(context, listen: false)
-            .fetchAndSetComments(id!);
+        // await Provider.of<Comments>(context, listen: false)
+        //     .fetchAndSetComments(id!);
         Navigator.of(context)
-            .pushNamed(PostDetailPage.routeName, arguments: id);
+            .pushNamed(PostDetailPage.routeName, arguments: post);
       },
     );
   }

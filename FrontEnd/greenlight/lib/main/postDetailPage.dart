@@ -9,6 +9,7 @@ import '../providers/comments.dart';
 import '../providers/posts.dart';
 import '../widgets/comment_item.dart';
 import '../model/comment.dart';
+import '../model/posting.dart';
 
 
 class PostDetailPage extends StatefulWidget {
@@ -41,12 +42,17 @@ class _PostDetailPageState extends State<PostDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final id = ModalRoute.of(context)!.settings.arguments as String;
-    final post =
-    Provider.of<Posts>(context).items.firstWhere((post) => post.pk == id);
-    final comments = Provider.of<Comments>(context).items;
-    final authUserId =
-    Provider.of<Auth>(context, listen: false).userId as String;
+    // final id = ModalRoute.of(context)!.settings.arguments as String;
+    // final post = Provider.of<Posts>(context).items.firstWhere((post) => post.pk == id);
+    // final comments = Provider.of<Comments>(context).items;
+    // final authUserId = Provider.of<Auth>(context, listen: false).userId as String;
+
+    final post = ModalRoute.of(context)!.settings.arguments as Post;
+    final id = '1';
+    final authUserId = '1';
+
+    print("userid = ");
+    print(post.userId);
 
     return Scaffold(
       appBar: AppBar(
@@ -56,6 +62,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
           overflow: TextOverflow.ellipsis,
         ),
         // 글쓴이가 자기 자신이면 수정, 삭제 버튼 활성
+
         actions: authUserId == post.userId
             ? <Widget>[
           IconButton(
@@ -63,7 +70,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed(EditPostPage.routeName,
-                  arguments: {'postId': id });
+                  arguments: {'postId': authUserId });
             },
           ),
           IconButton(
@@ -98,7 +105,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                         try {
                           Navigator.pop(context);
                           await Provider.of<Posts>(context, listen: false)
-                              .deletePost(id);
+                              .deletePost(authUserId, id);
                         } catch (error) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(
@@ -171,21 +178,21 @@ class _PostDetailPageState extends State<PostDetailPage> {
                     thickness: 1,
                   ),
                   // 댓글 목록
-                  comments.isEmpty
-                      ? Center(
+                  // comments.isEmpty ?
+                  Center(
                     child: Text('No comments'),
                   )
-                      : Column(
-                    children: [
-                      Column(
-                          children: comments
-                              .map((comment) => CommentItem(comment.id))
-                              .toList()),
-                      SizedBox(
-                        height: 100,
-                      )
-                    ],
-                  )
+                  //     : Column(
+                  //   children: [
+                  //     Column(
+                  //         children: comments
+                  //             .map((comment) => CommentItem(comment.id))
+                  //             .toList()),
+                  //     SizedBox(
+                  //       height: 100,
+                  //     )
+                  //   ],
+                  // )
                 ],
               ),
             ),
@@ -270,7 +277,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
     setState(() {
       _isLoading = true;
     });
-    await Provider.of<Comments>(context, listen: false).addComment(comment);
+   // await Provider.of<Comments>(context, listen: false).addComment(comment);
     _refreshPosts(context, postId);
     setState(() {
       _isLoading = false;

@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
           '/chat': (context) => ChatPage(),
           '/board': (context) => BoardPage(),
           '/editPost': (context) => EditPostPage(),
-
+          '/postDetail': (context) => PostDetailPage(),
         })
       );
     }

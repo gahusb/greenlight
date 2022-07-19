@@ -106,7 +106,7 @@ class _EditPostPageState extends State<EditPostPage> {
 
   @override
   Widget build(BuildContext context) {
-    final userId = Provider.of<Auth>(context).userId;
+    // final userId = Provider.of<Auth>(context).userId;
 
     return Scaffold(
       appBar: AppBar(
@@ -150,7 +150,7 @@ class _EditPostPageState extends State<EditPostPage> {
                       title: value,
                       content: _editedPost.content,
                       createdDate: _editedPost.createdDate,
-                      userId: userId,
+                      userId: '1',
                       pk: _editedPost.pk,
                     );
                   },

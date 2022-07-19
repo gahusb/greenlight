@@ -63,7 +63,7 @@ class Comments with ChangeNotifier {
           'contents': comment.contents,
           'datetime': timeStamp.toIso8601String(),
           'postId': comment.postId,
-          'creatorId': userId,
+          'userId': userId,
         }),
       );
 
