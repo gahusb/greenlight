@@ -9,7 +9,6 @@ import 'main/mapPage.dart';
 import 'main/boardPage.dart';
 import 'mainPage.dart';
 import 'signPage.dart';
-import './main/boardPage.dart';
 import './main/postDetailPage.dart';
 import './main/editPostPage.dart';
 import './providers/posts.dart';
@@ -61,6 +60,8 @@ class MyApp extends StatelessWidget {
           '/map': (context) => MapPage(),
           '/chat': (context) => ChatPage(),
           '/board': (context) => BoardPage(),
+          '/editPost': (context) => EditPostPage(),
+
         })
       );
     }

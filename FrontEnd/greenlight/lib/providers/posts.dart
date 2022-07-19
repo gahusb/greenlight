@@ -16,7 +16,7 @@ class Posts with ChangeNotifier {
 
   List<Post> get items {
     _items.sort((a, b) {
-      return b.datetime!.compareTo(a.datetime!);
+      return b.createdDate!.compareTo(a.createdDate!);
     });
     return [..._items];
   }
@@ -25,21 +25,23 @@ class Posts with ChangeNotifier {
     print('fetchAndSetPosts');
     final filterString = 'orderBy="boardId"&equalTo="';
     var url =
-        '/서버 url';
+        '118.67.134.177:8080/board';
     try {
-      // final response = await http.get(Uri.parse(url));
-      var list_data =
-      {'post_id': '1' ,
-        'user_id': 'naeun',
-        'title': '테스트',
-        'content': '테스트 내용입니다.',
-        'fst_crt_date': '2022-07-18'};
-
-
-      var response = jsonEncode(list_data);
+      final response = await http.get(Uri.parse(url));
+      // var list_data =
+      // {'post_id': '1' ,
+      //   'user_id': 'naeun',
+      //   'title': '테스트',
+      //   'content': '테스트 내용입니다.',
+      //   'fst_crt_date': '2022-07-18'};
+      //
+      //
+      // var response = jsonEncode(list_data);
+      // final extractedData = json.decode(response) as Map<String, dynamic>;
 
       print('response : ${response}');
-      final extractedData = json.decode(response) as Map<String, dynamic>;
+
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
       print('extractedData : ${extractedData}');
 
       if (extractedData == null) {
@@ -48,10 +50,10 @@ class Posts with ChangeNotifier {
 
       final List<Post> loadedPosts = _items;
       loadedPosts.add(Post(
-        id: extractedData['postId'],
+        pk: extractedData['postId'],
         title: extractedData['title'],
-        contents: extractedData['content'],
-        datetime: DateTime.parse(extractedData['fst_crt_date']),
+        content: extractedData['content'],
+        createdDate: DateTime.parse(extractedData['fst_crt_date']),
         userId: extractedData['user_id'],
       ));
 
@@ -73,7 +75,7 @@ class Posts with ChangeNotifier {
         Uri.parse(url),
         body: json.encode({
           'title': post.title,
-          'contents': post.contents,
+          'contents': post.content,
           'datetime': timeStamp.toIso8601String(),
           'creatorId': post.userId,
         }),
@@ -81,10 +83,10 @@ class Posts with ChangeNotifier {
 
       final newPost = Post(
         title: post.title,
-        contents: post.contents,
-        datetime: timeStamp,
+        content: post.content,
+        createdDate: timeStamp,
         userId: post.userId,
-        id: json.decode(response.body)['name'],
+        pk: json.decode(response.body)['name'],
       );
 
       _items.add(newPost);
@@ -97,14 +99,14 @@ class Posts with ChangeNotifier {
   }
 
   Future<void> updatePost(String? id, Post newPost) async {
-    final postIndex = _items.indexWhere((post) => post.id == id);
+    final postIndex = _items.indexWhere((post) => post.pk == id);
     if (postIndex >= 0) {
       final url =
           '/서버 url/posts/$id.json?auth=$authToken';
       await http.patch(Uri.parse(url),
           body: json.encode({
             'title': newPost.title,
-            'contents': newPost.contents,
+            'contents': newPost.content,
           }));
       _items[postIndex] = newPost;
       notifyListeners();
@@ -117,7 +119,7 @@ class Posts with ChangeNotifier {
     final url =
         '/서버 url/posts/$id.json?auth=$authToken';
 
-    final existingPostIndex = _items.indexWhere((post) => post.id == id);
+    final existingPostIndex = _items.indexWhere((post) => post.pk == id);
     Post? existingPost = _items[existingPostIndex];
     _items.removeAt(existingPostIndex);
     // notifyListeners();
@@ -128,7 +130,7 @@ class Posts with ChangeNotifier {
       notifyListeners();
       throw HttpException('Could not delete post.');
     }
-    _items.removeWhere((post) => post.id == id);
+    _items.removeWhere((post) => post.pk == id);
     notifyListeners();
     existingPost = null;
   }

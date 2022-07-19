@@ -22,7 +22,7 @@ class BoardPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              Navigator.of(context).pushNamed(EditPostScreen.routeName,
+              Navigator.of(context).pushNamed(EditPostPage.routeName,
                   arguments: {'postId': null});
             },
           ),
@@ -46,7 +46,7 @@ class BoardPage extends StatelessWidget {
                 itemBuilder: (_, i) => Column(
                   children: [
                     PostItem(
-                      postsData.items[i].id,
+                      postsData.items[i].pk,
                     ),
                     Divider(),
                   ],
