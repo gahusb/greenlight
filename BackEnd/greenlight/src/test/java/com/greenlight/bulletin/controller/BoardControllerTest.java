@@ -12,13 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import java.util.List;
 
+import static com.mysql.cj.conf.PropertyKey.logger;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -114,5 +112,34 @@ public class BoardControllerTest {
         assertThat(respDto.getContent()).isEqualTo(content);
         assertThat(respDto.getTitle()).isEqualTo(title);
         assertThat(respDto.getMemberId()).isEqualTo(memberId);
+    }
+
+    @Test
+    public void 게시판삭제() throws Exception{
+        //given
+//        String title = "게시판이름9";
+//        String content = "게시판내용9";
+//        String memberId = "cashbee";
+        Board board = boardRepository.save(
+                Board.builder()
+                        .title("제목삭제")
+                        .content("내용삭제")
+                        .memberId("아이디")
+                        .build()
+        );
+        Long savedPk = board.getPK();
+
+        String url = "http://localhost:" + port + "/board/cashbee/" + savedPk;
+
+        HttpEntity<Board> entity = new HttpEntity<>(board);
+
+        //when
+        ResponseEntity<Long> responseEntity =
+                testRestTemplate.exchange(url, HttpMethod.DELETE, entity, Long.class);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        assertThat(responseEntity.getBody()).isEqualTo(savedPk);
     }
 }
