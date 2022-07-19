@@ -3,27 +3,25 @@ package com.greenlight.bulletin.dto;
 import com.greenlight.Member.domain.Member;
 import com.greenlight.bulletin.domain.Board;
 import com.greenlight.bulletin.domain.Comment;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor
 @Builder
+@Data
 @AllArgsConstructor
 public class CommentSaveRequestDto {
     private Long PK;
     private String comment;
     private Board board;
-    private Member member;
+    private String memberId;
 
     public Comment toEntity() {
         return Comment.builder()
                 .PK(PK)
                 .comment(comment)
                 .board(board)
-                .member(member)
+                .memberId(memberId)
                 .build();
     }
 }

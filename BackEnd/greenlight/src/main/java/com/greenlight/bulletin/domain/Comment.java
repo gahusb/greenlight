@@ -1,7 +1,6 @@
 package com.greenlight.bulletin.domain;
 
 import com.greenlight.BaseTimeEntity;
-import com.greenlight.Member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,9 +25,7 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "board_pk")
     private Board board;
 
-    @ManyToOne
-    @JoinColumn(name = "member_pk")
-    private Member member; // 사용자 ID
+    private String memberId;
 
     public void update(String comment){
         this.comment = comment;
