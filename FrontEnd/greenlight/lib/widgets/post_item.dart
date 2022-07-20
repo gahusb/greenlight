@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../main/postDetailPage.dart';
 import '../providers/posts.dart';
 import '../providers/comments.dart';
+
 
 class PostItem extends StatelessWidget {
   final String? id;
@@ -31,8 +33,8 @@ class PostItem extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       trailing: (DateTime.now().day - post.createdDate!.day >= 1)
-          ? Text(DateFormat('MM/dd').format(post.createdDate!))
-          : Text(DateFormat('HH:mm').format(post.createdDate!)),
+          ? Text(DateFormat('MM/dd', 'ko').format(post.createdDate!))
+          : Text(DateFormat('HH:mm', 'ko').format(post.createdDate!)),
       onTap: () async {
         // await Provider.of<Comments>(context, listen: false)
         //     .fetchAndSetComments(id!);

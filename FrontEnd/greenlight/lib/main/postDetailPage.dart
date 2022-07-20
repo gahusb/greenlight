@@ -28,10 +28,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
   final _commentTextEditController = TextEditingController();
 
   Future<void> _refreshPosts(
-      BuildContext context, String postId) async {
+      BuildContext context, String pk) async {
     await Provider.of<Posts>(context, listen: false).fetchAndSetPosts();
     await Provider.of<Comments>(context, listen: false)
-        .fetchAndSetComments(postId);
+        .fetchAndSetComments(pk);
   }
 
   @override
@@ -48,11 +48,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
     // final authUserId = Provider.of<Auth>(context, listen: false).userId as String;
 
     final post = ModalRoute.of(context)!.settings.arguments as Post;
-    final id = '1';
-    final authUserId = '1';
+    final authUserId = 'temp';  // todo: 테스트용. 추후 로그인 id 가져오기 필요
 
-    print("userid = ");
-    print(post.userId);
 
     return Scaffold(
       appBar: AppBar(
@@ -70,7 +67,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed(EditPostPage.routeName,
-                  arguments: {'postId': authUserId });
+                  arguments: {'pk': post.pk });
             },
           ),
           IconButton(
@@ -105,7 +102,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                         try {
                           Navigator.pop(context);
                           await Provider.of<Posts>(context, listen: false)
-                              .deletePost(authUserId, id);
+                              .deletePost(authUserId, post.pk!);
                         } catch (error) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(
@@ -130,7 +127,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
             _commentFocusNode.unfocus();
           },
           child: RefreshIndicator(
-            onRefresh: () => _refreshPosts(context, id),
+            onRefresh: () => _refreshPosts(context, post.pk!),
             child: SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.all(8),
@@ -148,9 +145,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
                         ),
                       ),
                     ),
-                    title: Text('익명'),
-                    subtitle: Text(DateFormat('yy/MM/dd - HH:mm:ss')
-                        .format(post.createdDate!)),
+                    title: Text(post.userId!),
+                    subtitle: Text(DateFormat('yy/MM/dd - HH:mm:ss', 'ko').format(post.createdDate!)),
                   ),
                   // 제목
                   Container(
@@ -267,10 +263,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
     );
   }
 
-  Future<void> _addComment(String postId, String contents) async {
+  Future<void> _addComment(String pk, String contents) async {
     final comment = Comment(
         contents: contents,
-        postId: postId,
+        pk: pk,
         userId: null,
         datetime: null,
         id: null);
@@ -278,7 +274,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
       _isLoading = true;
     });
    // await Provider.of<Comments>(context, listen: false).addComment(comment);
-    _refreshPosts(context, postId);
+    _refreshPosts(context, pk);
     setState(() {
       _isLoading = false;
     });

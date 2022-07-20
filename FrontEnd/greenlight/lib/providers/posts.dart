@@ -24,42 +24,30 @@ class Posts with ChangeNotifier {
   Future<void> fetchAndSetPosts() async {
     print('fetchAndSetPosts');
 
-    // var url =
-    //     '118.67.134.177:8080/board';
+    var url = 'http://118.67.134.177:8080/board/temp/24';
+
     try {
-      //final response = await http.get(Uri.parse(url));
-      //final extractedData = json.decode(response.body) as Map<String, dynamic>;
-
-      var list_data =
-      {'post_id': '1' ,
-        'user_id': 'naeun',
-        'title': '테스트',
-        'content': '테스트 내용입니다.',
-        'fst_crt_date': '2022-07-18'};
-
-      var response = jsonEncode(list_data);
-      final extractedData = json.decode(response) as Map<String, dynamic>;
-
-      print('response : ${response}');
-
-      print('extractedData : ${extractedData}');
-
+      final response = await http.get(Uri.parse(url));
+      final extractedData = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
       if (extractedData == null) {
         return;
       }
 
-      final List<Post> loadedPosts = _items;
-      loadedPosts.add(Post(
-        pk: extractedData['postId'],
-        title: extractedData['title'],
-        content: extractedData['content'],
-        // createdDate: DateTime.parse(extractedData['fst_crt_date']),
-        userId: extractedData['user_id'],
-      ));
-
+      final List<Post> loadedPosts = [];
+      //extractedData.forEach((pk, postData) {
+        loadedPosts.add(Post(
+          pk: extractedData['pk'].toString(), // todo: toString()일괄 삭제, Post의 pk type int로 변경
+          title: extractedData['title'],
+          content: extractedData['content'],
+          // createdDate: DateTime.parse(postData['createdDate']),  // 실제 데이터
+          createdDate: DateTime.now(),
+          userId: extractedData['memberId'],
+        ));
+      //});
+      _items=[];
       _items = loadedPosts;
-
       notifyListeners();
+
     } catch (error) {
       throw (error);
     }
@@ -67,30 +55,18 @@ class Posts with ChangeNotifier {
 
   Future<void> addPost(Post post) async {
     final url =
-        '118.67.134.177/board/$post.userId';
-    final timeStamp = DateTime.now();
+        'http://118.67.134.177:8080/board/${post.userId}';
 
     try {
-      // final response = await http.post(
-      //   Uri.parse(url),
-      //   body: json.encode({
-      //     'title': post.title,
-      //     'content': post.content,
-      //     'createdDate': timeStamp.toIso8601String(),
-      //     'userId': post.userId,
-      //   }),
-      // );
-
-      final newPost = Post(
-        title: post.title,
-        content: post.content,
-        createdDate: timeStamp,
-        userId: post.userId,
-        // pk: json.decode(response.body)['name'],
-        pk: '1',
-      );
-
-      _items.add(newPost);
+       final response = await http.post(
+         Uri.parse(url),
+         headers: {"Content-Type": "application/json"},
+         body: json.encode({
+           'title': post.title,
+           'content': post.content,
+           'memberId': post.userId,
+         }),
+       );
 
       notifyListeners();
     } catch (error) {
@@ -103,10 +79,11 @@ class Posts with ChangeNotifier {
     final postIndex = _items.indexWhere((post) => post.pk == post_id);
     if (postIndex >= 0) {
       final url =
-          '118.67.134.177/board/$newPost.userId/$post_id';
-      await http.patch(Uri.parse(url),
+          'http://118.67.134.177:8080/board/{$newPost.userId}/$post_id';
+      await http.put(Uri.parse(url),
+          headers: {"Content-Type": "application/json"},
           body: json.encode({
-            'member_id' : newPost.userId,
+            'memberId' : newPost.userId,
             'title': newPost.title,
             'content': newPost.content,
           }));
@@ -119,21 +96,14 @@ class Posts with ChangeNotifier {
 
   Future<void> deletePost(String? user_id, String post_id) async {
     final url =
-        '118.67.134.177/board/$user_id/$post_id';
-
-    final existingPostIndex = _items.indexWhere((post) => post.pk == post_id);
-    Post? existingPost = _items[existingPostIndex];
-    _items.removeAt(existingPostIndex);
-    // notifyListeners();
+        'http://118.67.134.177:8080/board/$user_id/$post_id';
 
     final response = await http.delete(Uri.parse(url));
     if (response.statusCode >= 400) {
-      _items.insert(existingPostIndex, existingPost);
       notifyListeners();
       throw HttpException('Could not delete post.');
     }
-    _items.removeWhere((post) => post.pk == post_id);
+
     notifyListeners();
-    existingPost = null;
   }
 }

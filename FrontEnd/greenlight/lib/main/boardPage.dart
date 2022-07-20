@@ -23,7 +23,7 @@ class BoardPage extends StatelessWidget {
             icon: const Icon(Icons.add),
             onPressed: () {
               Navigator.of(context).pushNamed(EditPostPage.routeName,
-                  arguments: {'postId': null});
+                  arguments: {'pk': null});
             },
           ),
         ],

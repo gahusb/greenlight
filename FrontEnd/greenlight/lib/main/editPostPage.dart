@@ -20,7 +20,6 @@ class _EditPostPageState extends State<EditPostPage> {
     pk: null,
     title: '',
     content: '',
-    createdDate: null,
     userId: '',
   );
 
@@ -42,11 +41,11 @@ class _EditPostPageState extends State<EditPostPage> {
   void didChangeDependencies() {
     arguments = ModalRoute.of(context)!.settings.arguments as Map;
     if (_isInit) {
-      final postId = arguments['postId'];
-      if (postId != null) {
+      final pk = arguments['pk'];
+      if (pk != null) {
         _editedPost = Provider.of<Posts>(context, listen: false)
             .items
-            .firstWhere((post) => post.pk == postId);
+            .firstWhere((post) => post.pk == pk);
         _initValues = {
           'title': _editedPost.title ?? '',
           'content': _editedPost.content ?? '',
@@ -110,7 +109,7 @@ class _EditPostPageState extends State<EditPostPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: arguments['postId'] != null ? Text('글 수정') : Text('글 작성'),
+        title: arguments['pk'] != null ? Text('글 수정') : Text('글 작성'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.check),

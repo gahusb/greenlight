@@ -21,8 +21,8 @@ class Comments with ChangeNotifier {
     return [..._items];
   }
 
-  Future<void> fetchAndSetComments(String postId) async {
-    final filterString = 'orderBy="postId"&equalTo="$postId"';
+  Future<void> fetchAndSetComments(String pk) async {
+    final filterString = 'orderBy="pk"&equalTo="$pk"';
     var url =
         '/서버 url/comments.json?auth=$authToken&$filterString';
     try {
@@ -40,7 +40,7 @@ class Comments with ChangeNotifier {
           datetime: DateTime.parse(commentData['datetime'])
               .toUtc()
               .add(Duration(hours: 9)),
-          postId: commentData['postId'],
+          pk: commentData['pk'],
           userId: commentData['creatorId'],
         ));
       });
@@ -62,7 +62,7 @@ class Comments with ChangeNotifier {
         body: json.encode({
           'contents': comment.contents,
           'datetime': timeStamp.toIso8601String(),
-          'postId': comment.postId,
+          'pk': comment.pk,
           'userId': userId,
         }),
       );
@@ -70,7 +70,7 @@ class Comments with ChangeNotifier {
       final newComment = Comment(
         contents: comment.contents,
         datetime: timeStamp,
-        postId: comment.postId,
+        pk: comment.pk,
         userId: comment.userId,
         id: json.decode(response.body)['name'],
       );
