@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:greenlight/providers/posts.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'ChatPage.dart';
 import 'login.dart';
@@ -49,6 +50,15 @@ class MyApp extends StatelessWidget {
         child:
         MaterialApp(
         title: '그린라이트',
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('ko', 'KR'),
+        ],
+        locale: const Locale('ko'),
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
